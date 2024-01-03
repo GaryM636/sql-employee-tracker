@@ -61,7 +61,6 @@ async function addEmployee(firstName, lastName, roleId, managerId) {
     throw new Error('The specified manager ID does not exist.');
   }
 
-  // If managerId is blank, set it to NULL
   managerId = managerId === '' ? null : managerId;
 
   await connection.promise().query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [firstName, lastName, roleId, managerId]);
@@ -83,6 +82,40 @@ async function updateEmployeeRole(employeeId, newRoleId) {
   await connection.promise().query('UPDATE employee SET role_id = ? WHERE id = ?', [newRoleId, employeeId]);
 }
 
+// Function to delete a department by ID
+async function deleteDepartment(departmentId) {
+  const departmentExists = await doesDepartmentIdExist(departmentId);
+
+  if (!departmentExists) {
+    throw new Error('The specified department ID does not exist.');
+  }
+
+  await connection.promise().query('DELETE FROM department WHERE id = ?', [departmentId]);
+}
+
+// Function to delete a role by ID
+async function deleteRole(roleId) {
+  const roleExists = await doesRoleIdExist(roleId);
+
+  if (!roleExists) {
+    throw new Error('The specified role ID does not exist.');
+  }
+
+  await connection.promise().query('DELETE FROM role WHERE id = ?', [roleId]);
+}
+
+
+// Function to delete an employee by ID
+async function deleteEmployee(employeeId) {
+  const employeeExists = await doesEmployeeIdExist(employeeId);
+
+  if (!employeeExists) {
+    throw new Error('The specified employee ID does not exist.');
+  }
+
+  await connection.promise().query('DELETE FROM employee WHERE id = ?', [employeeId]);
+}
+
 module.exports = {
   viewAllDepartments,
   viewAllRoles,
@@ -91,4 +124,7 @@ module.exports = {
   addRole,
   addEmployee,
   updateEmployeeRole,
+  deleteDepartment,
+  deleteRole,
+  deleteEmployee,
 };

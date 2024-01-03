@@ -8,8 +8,19 @@ const {
   addRole,
   addEmployee,
   updateEmployeeRole,
+  deleteDepartment,
+  deleteRole,
+  deleteEmployee,
 } = require('./db/queries');
-const { departmentQuestions, roleQuestions, employeeQuestions, updateEmployeeRoleQuestions } = require('./lib/questions');
+const {
+  departmentQuestions,
+  roleQuestions,
+  employeeQuestions,
+  updateEmployeeRoleQuestions,
+  deleteDepartmentQuestion,
+  deleteRoleQuestion,
+  deleteEmployeeQuestion,
+} = require('./lib/questions');
 
 // Function to start the application
 function startApp() {
@@ -21,12 +32,15 @@ function startApp() {
         message: 'What would you like to do?',
         choices: [
           'View All Employees',
-          'Add Employee',
-          'Update Employee Role',
           'View All Roles',
-          'Add Role',
           'View All Departments',
+          'Add Employee',
+          'Add Role',
           'Add Department',
+          'Update Employee Role',
+          'Delete Employee',
+          'Delete Role',
+          'Delete Department',
           'Quit',
         ],
       },
@@ -106,6 +120,42 @@ function startApp() {
               console.log('Department added successfully!');
             } catch (error) {
               console.error('Error adding department:', error.message);
+            }
+            startApp();
+          });
+          break;
+
+        case 'Delete Employee':
+          inquirer.prompt(deleteEmployeeQuestion).then(async (answers) => {
+            try {
+              await deleteEmployee(answers.employeeId);
+              console.log('Employee deleted successfully!');
+            } catch (error) {
+              console.error('Error deleting employee:', error.message);
+            }
+            startApp();
+          });
+          break;
+
+        case 'Delete Role':
+          inquirer.prompt(deleteRoleQuestion).then(async (answers) => {
+            try {
+              await deleteRole(answers.roleId);
+              console.log('Role deleted successfully!');
+            } catch (error) {
+              console.error('Error deleting role:', error.message);
+            }
+            startApp();
+          });
+          break;
+
+        case 'Delete Department':
+          inquirer.prompt(deleteDepartmentQuestion).then(async (answers) => {
+            try {
+              await deleteDepartment(answers.departmentId);
+              console.log('Department deleted successfully!');
+            } catch (error) {
+              console.error('Error deleting department:', error.message);
             }
             startApp();
           });
